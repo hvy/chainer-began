@@ -1,6 +1,7 @@
-import chainer
+from chainer import cuda
 from chainer import functions as F
 from chainer import reporter
+from chainer import training
 from chainer import Variable
 
 
@@ -10,7 +11,7 @@ def optimize(optimizer, loss):
     optimizer.update()
 
 
-class BEGANUpdater(chainer.training.StandardUpdater):
+class BEGANUpdater(training.StandardUpdater):
     def __init__(self, *, iterator, noise_iterator, optimizer_generator,
                  optimizer_discriminator, gamma, k_0, lambda_k, loss_norm,
                  device=-1):
@@ -27,7 +28,7 @@ class BEGANUpdater(chainer.training.StandardUpdater):
         self.loss_norm = loss_norm
 
         if device >= 0:
-            chainer.cuda.get_device(device).use()
+            cuda.get_device(device).use()
             for optimizer in optimizers.values():
                 optimizer.target.to_gpu()
 
@@ -113,43 +114,3 @@ class BEGANUpdater(chainer.training.StandardUpdater):
     def sample(self):
         z = self.z_batch()
         return self.generator(z)
-
-    """
-    def update_dis(self):
-        # Reconstruction loss for real data
-        x_real = self.x_batch()
-        x_real_recon = self.discriminator(x_real)
-        loss_x = self.pixel_wise_loss(x_real, x_real_recon)
-
-        # Reconstruct loss for generated data
-        x_fake = self.generator(self.z_batch())
-        x_fake_recon = self.discriminator(x_fake)
-        loss_gen = self.pixel_wise_loss(x_fake, x_fake_recon)
-
-        # Total discriminator loss
-        loss_dis = loss_x - (self.k * loss_gen)
-
-        reporter.report({'loss': loss_dis}, self.discriminator)
-        reporter.report({'k': self.k})
-
-        self.discriminator.cleargrads()
-        loss_dis.backward()
-        self.optimizer_discriminator.update()
-
-        return loss_x.data
-
-    def update_gen(self):
-        # Reconstruction loss for generated data
-        z = self.z_batch()
-        x_fake = self.generator(z)
-        x_fake_recon = self.discriminator(x_fake)
-        loss_gen = self.pixel_wise_loss(x_fake, x_fake_recon)
-
-        reporter.report({'loss': loss_gen}, self.generator)
-
-        self.generator.cleargrads()
-        loss_gen.backward()
-        self.generator_optimizer.update()
-
-        return loss_gen.data
-    """

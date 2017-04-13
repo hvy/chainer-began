@@ -1,14 +1,13 @@
 import os
 
-from chainer import training
 from chainer import cuda
-from chainer.training import extension
+from chainer import training
 import numpy
 
-import plot
+from lib.utils import imutil
 
 
-class GeneratorSample(extension.Extension):
+class GeneratorSample(training.extension.Extension):
     def __init__(self, dirname='sample', sample_format='png'):
         self._dirname = dirname
         self._sample_format = sample_format
@@ -20,14 +19,14 @@ class GeneratorSample(extension.Extension):
 
         x = self.sample(trainer)
 
-        # Assume that x is somewhere in the range [-1, 1] and rescale to
-        # [0, 255]
+        # Assume that x is in range [-1, 1] and rescale to [0, 255]
         x = numpy.clip((x + 1.0) / 2.0 * 255.0, 0.0, 255.0)
 
         filename = 'sample_{}.{}'.format(trainer.updater.iteration,
-                                  self._sample_format)
+                                         self._sample_format)
         filename = os.path.join(dirname, filename)
-        plot.save_ims(filename, x)
+
+        imutil.save_ims(filename, x)
 
     def sample(self, trainer):
         x = trainer.updater.sample()

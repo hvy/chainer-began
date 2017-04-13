@@ -1,30 +1,22 @@
-import glob
-
 from chainer import iterators
 from chainer import optimizers
 from chainer import training
 from chainer.training import extensions
 
-import datasets
-from extensions import GeneratorSample
-from iterators import RandomNoiseIterator
-from iterators import UniformNoiseGenerator
-from models import Discriminator
-from models import Generator
+from lib import datasets
+from lib.extensions import GeneratorSample
+from lib.iterators import RandomNoiseIterator
+from lib.iterators import UniformNoiseGenerator
+from lib.models import Discriminator
+from lib.models import Generator
+from lib.updater import BEGANUpdater
 import train_config
-from updater import BEGANUpdater
-
-
-def get_celeba(root, size=(64, 64)):
-    paths = glob.glob('{}/Img/img_align_celeba_png/*.png'
-                      .format(root))
-    return datasets.ImageDataset(paths, size)
 
 
 if __name__ == '__main__':
     args = train_config.parse_args()
 
-    train = get_celeba(args.celeba_root)
+    train = datasets.get_celeba(args.celeba_root)
     train_iter = iterators.SerialIterator(train, args.batch_size)
     z_iter = RandomNoiseIterator(UniformNoiseGenerator(-1, 1, args.n_z),
                                  args.batch_size)
@@ -46,7 +38,6 @@ if __name__ == '__main__':
         device=args.gpu)
 
     trainer = training.Trainer(updater, stop_trigger=(args.epochs, 'epoch'))
-
     trainer.extend(extensions.LogReport())
     trainer.extend(extensions.ProgressBar())
     trainer.extend(extensions.PrintReport(['iteration',
@@ -54,5 +45,4 @@ if __name__ == '__main__':
                                            'dis/loss',
                                            'k']))
     trainer.extend(GeneratorSample(), trigger=(100, 'iteration'))
-
     trainer.run()

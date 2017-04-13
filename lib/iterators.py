@@ -1,6 +1,5 @@
 import numpy
 
-import chainer
 from chainer.dataset import iterator
 
 

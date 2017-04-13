@@ -1,3 +1,5 @@
+import glob
+
 import chainer
 import numpy as np
 from PIL import Image
@@ -13,16 +15,12 @@ class ImageDataset(chainer.dataset.DatasetMixin):
 
     def get_example(self, i):
         path = self.paths[i]
-        im_file = Image.open(path)
-        im_file = im_file.resize(self.size, Image.ANTIALIAS)
 
-        try:
-            im = np.asarray(im_file, dtype=np.float32)
-        finally:
-            if hasattr(im_file, 'close'):
-                im_file.close()
+        with Image.open(path) as f:
+            f = f.resize(self.size, Image.ANTIALIAS)
+            im = np.asarray(f, dtype=np.float32)
 
-        # NOTE: Uncomment if the image is modified
+        # NOTE: Uncomment if it is necessary to modify the image
         # im = im.copy()
 
         im = im.transpose((2, 0, 1))
@@ -32,3 +30,8 @@ class ImageDataset(chainer.dataset.DatasetMixin):
         im -= 1
 
         return im
+
+
+def get_celeba(root, size=(64, 64)):
+    paths = glob.glob('{}/Img/img_align_celeba_png/*.png' .format(root))
+    return ImageDataset(paths, size)
