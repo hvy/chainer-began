@@ -69,47 +69,27 @@ class BEGANUpdater(training.StandardUpdater):
             raise ValueError('Invalid norm {}'.format(self.loss_norm))
 
     def update_core(self):
-        loss_d, loss_real, _ = self.update_discriminator()
-        loss_d, loss_real = loss_d.data, loss_real.data
+        z = self.z_batch()
+        x_fake = self.generator(z)
+        x_fake_recon = self.discriminator(x_fake)
+        recon_loss_fake = self.pixel_wise_loss(x_fake, x_fake_recon)
 
-        loss_g = self.update_generator()
-        loss_g = loss_g.data
+        x_real = self.x_batch()
+        x_real_recon = self.discriminator(x_real)
+        recon_loss_real = self.pixel_wise_loss(x_real, x_real_recon)
 
-        self.k += self.lambda_k * ((self.gamma * loss_real) - loss_g)
+        loss_d = recon_loss_real - (self.k * recon_loss_fake)
+        loss_g = recon_loss_fake
+
+        optimize(self.optimizer_discriminator, loss_d)
+        optimize(self.optimizer_generator, loss_g)
+
+        loss_g, recon_loss_real = loss_g.data, recon_loss_real.data
+        self.k += self.lambda_k * ((self.gamma * recon_loss_real) - loss_g)
 
         reporter.report({'loss': loss_d}, self.discriminator)
         reporter.report({'loss': loss_g}, self.generator)
         reporter.report({'k': self.k})
-
-    def update_discriminator(self):
-        # Reconstruction loss for real data
-        x_real = self.x_batch()
-        x_real_recon = self.discriminator(x_real)
-        loss_real = self.pixel_wise_loss(x_real, x_real_recon)
-
-        # Reconstruction loss for generated data
-        z = self.z_batch()
-        x_fake = self.generator(z)
-        x_fake_recon = self.discriminator(x_fake)
-        loss_fake = self.pixel_wise_loss(x_fake, x_fake_recon)
-
-        # Total discriminator loss
-        loss = loss_real - (self.k * loss_fake)
-
-        optimize(self.optimizer_discriminator, loss)
-
-        return loss, loss_real, loss_fake
-
-    def update_generator(self):
-        # Total generator loss
-        z = self.z_batch()
-        x_fake = self.generator(z)
-        x_fake_recon = self.discriminator(x_fake)
-        loss = self.pixel_wise_loss(x_fake, x_fake_recon)
-
-        optimize(self.optimizer_generator, loss)
-
-        return loss
 
     def sample(self):
         z = self.z_batch()
