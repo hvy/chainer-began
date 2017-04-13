@@ -78,18 +78,24 @@ class BEGANUpdater(training.StandardUpdater):
         x_real_recon = self.discriminator(x_real)
         recon_loss_real = self.pixel_wise_loss(x_real, x_real_recon)
 
-        loss_d = recon_loss_real - (self.k * recon_loss_fake)
         loss_g = recon_loss_fake
+        loss_d = recon_loss_real - (self.k * recon_loss_fake)
 
         optimize(self.optimizer_discriminator, loss_d)
         optimize(self.optimizer_generator, loss_g)
 
-        loss_g, recon_loss_real = loss_g.data, recon_loss_real.data
-        self.k += self.lambda_k * ((self.gamma * recon_loss_real) - loss_g)
+        # Update k and report the convergence using the process error
+        loss_g, loss_d = loss_g.data, loss_d.data
+        recon_loss_real = recon_loss_real.data
+
+        process_err = (self.gamma * recon_loss_real) - loss_g
+        self.k += self.lambda_k * process_err
+        convergence = recon_loss_real + abs(process_err)
 
         reporter.report({'loss': loss_d}, self.discriminator)
         reporter.report({'loss': loss_g}, self.generator)
         reporter.report({'k': self.k})
+        reporter.report({'convergence': convergence})
 
     def sample(self):
         z = self.z_batch()
