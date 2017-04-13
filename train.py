@@ -40,7 +40,8 @@ if __name__ == '__main__':
     trainer = training.Trainer(updater, stop_trigger=(args.epochs, 'epoch'))
     trainer.extend(extensions.LogReport())
     trainer.extend(extensions.ProgressBar())
-    trainer.extend(extensions.PrintReport(['iteration',
+    trainer.extend(extensions.PrintReport(['epoch',
+                                           'iteration',
                                            'gen/loss',
                                            'dis/loss',
                                            'k']))
