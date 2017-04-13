@@ -38,10 +38,11 @@ if __name__ == '__main__':
         device=args.gpu)
 
     trainer = training.Trainer(updater, stop_trigger=(args.epochs, 'epoch'))
-    trainer.extend(extensions.LogReport())
+    trainer.extend(extensions.LogReport(trigger=(1, 'iteration')))
     trainer.extend(extensions.ProgressBar())
     trainer.extend(extensions.PrintReport(['epoch',
                                            'iteration',
+                                           'convergence',
                                            'gen/loss',
                                            'dis/loss',
                                            'k']))
