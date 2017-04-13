@@ -44,5 +44,5 @@ if __name__ == '__main__':
                                            'gen/loss',
                                            'dis/loss',
                                            'k']))
-    trainer.extend(GeneratorSampler(), trigger=(100, 'iteration'))
+    trainer.extend(GeneratorSampler(), trigger=(1000, 'iteration'))
     trainer.run()
