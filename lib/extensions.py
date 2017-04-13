@@ -7,7 +7,7 @@ import numpy
 from lib.utils import imutil
 
 
-class GeneratorSample(training.extension.Extension):
+class GeneratorSampler(training.extension.Extension):
     def __init__(self, dirname='sample', sample_format='png'):
         self._dirname = dirname
         self._sample_format = sample_format

@@ -4,7 +4,7 @@ from chainer import training
 from chainer.training import extensions
 
 from lib import datasets
-from lib.extensions import GeneratorSample
+from lib.extensions import GeneratorSampler
 from lib.iterators import RandomNoiseIterator
 from lib.iterators import UniformNoiseGenerator
 from lib.models import Discriminator
@@ -44,5 +44,5 @@ if __name__ == '__main__':
                                            'gen/loss',
                                            'dis/loss',
                                            'k']))
-    trainer.extend(GeneratorSample(), trigger=(100, 'iteration'))
+    trainer.extend(GeneratorSampler(), trigger=(100, 'iteration'))
     trainer.run()
