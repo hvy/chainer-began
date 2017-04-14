@@ -23,6 +23,7 @@ def parse_args():
     # General
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--batch-size', type=int, default=16)
+    parser.add_argument('--out-dir', type=str, default='result')
 
     # Hyperparameters
     parser.add_argument('--n-z', type=int, default=64,

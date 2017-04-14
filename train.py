@@ -37,8 +37,9 @@ if __name__ == '__main__':
         loss_norm=args.loss_norm,
         device=args.gpu)
 
-    trainer = training.Trainer(updater, stop_trigger=(args.epochs, 'epoch'))
-    trainer.extend(extensions.LogReport(trigger=(1, 'iteration')))
+    trainer = training.Trainer(updater, out=args.out_dir,
+                               stop_trigger=(args.epochs, 'epoch'))
+    trainer.extend(extensions.LogReport(trigger=(1000, 'iteration')))
     trainer.extend(extensions.ProgressBar())
     trainer.extend(extensions.PrintReport(['epoch',
                                            'iteration',
