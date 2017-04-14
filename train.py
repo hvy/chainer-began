@@ -40,7 +40,7 @@ if __name__ == '__main__':
         device=args.gpu)
 
     trainer = training.Trainer(updater, out=args.out_dir,
-                               stop_trigger=(args.epochs, 'epoch'))
+                               stop_trigger=(args.iterations, 'iteration'))
     trainer.extend(extensions.LogReport(trigger=(1000, 'iteration')))
     trainer.extend(extensions.ProgressBar())
     trainer.extend(extensions.PrintReport(['epoch',
