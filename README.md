@@ -14,9 +14,8 @@ python train.py --celeba-root celeba/CelebA --batch-size 16 --iterations 10000 -
 
 ## Samples
 
-![](images/sample_47000.png)
+![](images/sample_64000.png)
 
 ## Loss
 
 ![](images/loss.png)
-
