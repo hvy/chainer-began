@@ -33,7 +33,7 @@ def parse_args():
                         help='Diversity ratio. Lower values lead to lower \
                              image diversity')
     parser.add_argument('--k-0', type=float, default=0)
-    parser.add_argument('--lambda_k', type=float, default=0.001)
+    parser.add_argument('--lambda-k', type=float, default=0.001)
     parser.add_argument('--g-lr', type=float, default=5e-5)
     parser.add_argument('--d-lr', type=float, default=5e-5)
     parser.add_argument('--g-n', type=int, default=16)
