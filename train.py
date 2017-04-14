@@ -16,7 +16,9 @@ import train_config
 if __name__ == '__main__':
     args = train_config.parse_args()
 
-    train = datasets.get_celeba(args.celeba_root)
+    train = datasets.get_celeba(args.celeba_root, args.celeba_scale,
+                                crop='face')
+
     train_iter = iterators.SerialIterator(train, args.batch_size)
     z_iter = RandomNoiseIterator(UniformNoiseGenerator(-1, 1, args.n_z),
                                  args.batch_size)

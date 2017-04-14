@@ -15,10 +15,11 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', type=int, default=-1)
 
-    # Dataset
+    # CelebA dataset specific
     parser.add_argument('--celeba-root', type=str,
-                        default='/home/test/datasets/celeba_aligned/CelebA',
-                        help='Root directory of CelebA')
+                        default='/home/test/datasets/celeba_aligned/CelebA')
+    parser.add_argument('--celeba-scale', type=int, default=64,
+                        help='Width and height dimension of images')
 
     # General
     parser.add_argument('--epochs', type=int, default=100)

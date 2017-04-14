@@ -35,7 +35,17 @@ class ImageDataset(chainer.dataset.DatasetMixin):
 
         return im
 
+def get_celeba(root, size=(64, 64), crop=None):
 
-def get_celeba(root, size=(64, 64), crop=(25, 50, 25+128, 50+128)):
+    if isinstance(size, int):
+        size = size, size
+
+    if crop == 'face':
+        w = 128
+        h = 128
+        upper_left = (25, 50)
+        bottom_right = (25 + w, 50 + h)
+        crop = upper_left + bottom_right
+
     paths = glob.glob('{}/Img/img_align_celeba_png/*.png' .format(root))
     return ImageDataset(paths, size, crop)
