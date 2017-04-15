@@ -12,12 +12,14 @@ Images will during training be center cropped to remove some of the background a
 python train.py --celeba-root celeba/CelebA --batch-size 16 --iterations 10000 --gpu 1
 ```
 
-## Samples
+## Training
 
-Images sampled from the generator with random noise from unif(-1, 1).
+Images sampled from the generator with random noise from unif(-1, 1) after 1142000 iterations using the default parameters in [config.py](config.py).
 
 ![](images/sample_1142000.png)
 
-## Loss
+Plotting the losses for the generator and the discriminator as well as the global loss based on the process error. The visual fidely of the generated samples keep improving even though the curves seem to converge.
+
+The Adam learning rates are kept constant 5e-5, in contrast to the paper. Starting with a higher learning rate and then decaying it is expected to improve the results and converge faster.
 
 ![](images/loss.png)
