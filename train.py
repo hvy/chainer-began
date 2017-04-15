@@ -10,11 +10,11 @@ from lib.iterators import UniformNoiseGenerator
 from lib.models import Discriminator
 from lib.models import Generator
 from lib.updater import BEGANUpdater
-import train_config
+import config
 
 
 if __name__ == '__main__':
-    args = train_config.parse_args()
+    args = config.parse_args()
 
     train = datasets.get_celeba(args.celeba_root, args.celeba_scale,
                                 crop='face')
