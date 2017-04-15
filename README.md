@@ -16,7 +16,7 @@ python train.py --celeba-root celeba/CelebA --batch-size 16 --iterations 10000 -
 
 Images sampled from the generator with random noise from unif(-1, 1).
 
-![](images/sample_421000.png)
+![](images/sample_1142000.png)
 
 ## Loss
 
