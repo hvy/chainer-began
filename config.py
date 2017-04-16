@@ -22,6 +22,7 @@ def parse_args():
                         help='Width and height dimension of images')
 
     # General
+    parser.add_argument('--dataset', type=str, default='celeba')
     parser.add_argument('--iterations', type=int, default=500000)
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--out-dir', type=str, default='result')
@@ -38,8 +39,14 @@ def parse_args():
     parser.add_argument('--lambda-k', type=float, default=0.001)
     parser.add_argument('--g-lr', type=float, default=5e-5)
     parser.add_argument('--d-lr', type=float, default=5e-5)
+    parser.add_argument('--g-lr-decay-interval', type=int, default=100000)
+    parser.add_argument('--d-lr-decay-interval', type=int, default=100000)
     parser.add_argument('--g-n', type=int, default=16)
     parser.add_argument('--d-n', type=int, default=16)
+    parser.add_argument('--g-block-size', type=int, default=2)
+    parser.add_argument('--d-block-size', type=int, default=2)
+    parser.add_argument('--g-embed-size', type=int, default=8)
+    parser.add_argument('--d-embed-size', type=int, default=8)
 
     # Other
     parser.add_argument('--loss-norm', type=int, default=1,

@@ -13,14 +13,18 @@ def optimize(optimizer, loss):
 
 class BEGANUpdater(training.StandardUpdater):
     def __init__(self, *, iterator, noise_iterator, optimizer_generator,
-                 optimizer_discriminator, gamma, k_0, lambda_k, loss_norm,
-                 device=-1):
+                 optimizer_discriminator, generator_lr_decay_interval,
+                 discriminator_lr_decay_interval, gamma, k_0, lambda_k,
+                 loss_norm, device=-1):
 
         iterators = {'main': iterator, 'z': noise_iterator}
         optimizers = {'gen': optimizer_generator,
                       'dis': optimizer_discriminator}
 
         super().__init__(iterators, optimizers, device=device)
+
+        self.gen_lr_decay_interval = generator_lr_decay_interval
+        self.dis_lr_decay_interval = discriminator_lr_decay_interval
 
         self.k = k_0
         self.lambda_k = lambda_k
@@ -81,21 +85,37 @@ class BEGANUpdater(training.StandardUpdater):
         loss_g = recon_loss_fake
         loss_d = recon_loss_real - (self.k * recon_loss_fake)
 
-        optimize(self.optimizer_discriminator, loss_d)
         optimize(self.optimizer_generator, loss_g)
+        optimize(self.optimizer_discriminator, loss_d)
 
         # Update k and report the convergence using the process error
         loss_g, loss_d = loss_g.data, loss_d.data
+        recon_loss_fake = recon_loss_fake.data
         recon_loss_real = recon_loss_real.data
 
         process_err = (self.gamma * recon_loss_real) - loss_g
         self.k += self.lambda_k * process_err
         convergence = recon_loss_real + abs(process_err)
 
-        reporter.report({'loss': loss_d}, self.discriminator)
-        reporter.report({'loss': loss_g}, self.generator)
+        # Decay the learning rate of the optimizers by a factor 2
+        if self.gen_lr_decay_interval is not None and \
+                self.iteration % self.gen_lr_decay_interval ==  \
+                self.gen_lr_decay_interval - 1:
+            self.optimizer_generator.alpha *= 0.5
+        if self.dis_lr_decay_interval is not None and \
+                self.iteration % self.dis_lr_decay_interval == \
+                self.dis_lr_decay_interval - 1:
+            self.optimizer_discriminator.alpha *= 0.5
+
         reporter.report({'k': self.k})
+        reporter.report({'process_err': process_err})
         reporter.report({'convergence': convergence})
+        reporter.report({'loss': loss_g}, self.generator)
+        reporter.report({'loss': loss_d}, self.discriminator)
+        reporter.report({'recon_loss_real': recon_loss_real},
+                        self.discriminator)
+        reporter.report({'recon_loss_fake': recon_loss_fake},
+                        self.discriminator)
 
     def sample(self):
         z = self.z_batch()
