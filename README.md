@@ -32,4 +32,4 @@ It is also possible to train the model with [CIFAR-10](https://www.cs.toronto.ed
 python train.py --dataset cifar10 --batch-size 16 --iterations 10000 --gpu 1
 ```
 
-However, with the same default hyperparameters as for CelebA, the results fare fairly poor with centered blob-like objects.
+However, with the same default hyperparameters as for CelebA, the results look fairly poor with centered blob-like objects.
