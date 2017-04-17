@@ -2,34 +2,40 @@
 
 Chainer implementation of the [BEGAN: Boundary Equilibrium Generative Adversarial Networks](https://arxiv.org/abs/1703.10717) by David Berthelot et al. Note that this is not the official implementation.
 
+## Results
+
+Training results using the default parameters in [config.py](config.py).
+
 ![](images/sample_1142000.png)
 
-Images sampled from the generator with random noise from unif(-1, 1) after 1142000 iterations using the default parameters in [config.py](config.py).
+Samples generated from unif(-1, 1) noise vector after around 1e6 iterations.
 
 ![](images/loss.png)
 
-Plotting the losses for the generator and the discriminator as well as the global loss based on the process error. The visual fidelity of the generated samples keep improving throughout the training.
+The generator and discriminator losses as well as the global loss based on the process error. The visual fidelity of the generated samples keep improving throughout the training.
 
-The Adam learning rates are kept constant 5e-5, in contrast to the paper. Starting with a higher learning rate and then decaying it is expected to improve the results and converge faster.
+The Adam learning rate is kept constant at 5e-5, in contrast to the paper. Starting with a higher learning rate and then decaying it is expected to improve the results and converge faster.
 
 ## Train
 
-The model is trained with the aligned and cropped version of [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). Download and unarchive the whole dataset first.
+### CelebA
 
-Images will during training be center cropped to remove some of the background and then rescaled to e.g. (64, 64) or (128, 128). A larger scale (output image resolution) will result in a deeper architecture. Images are randomly sampled from the generator every certain number of iterations, and saved under a subdirectory `result`.
+To train the model with CelebA as in the results above, download the aligned and cropped version of [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) and unarchive the whole dataset.
+
+Images will during training be **cropped** to remove some of the background and then **rescaled** to e.g. (64, 64) or (128, 128) pixels. A larger scale will automatically result in a deeper architecture.
 
 ```bash
 python train.py --celeba-root celeba/CelebA --celeba-scale 64 --batch-size 16 --iterations 10000 --gpu 1
 ```
 
-### Other Datasets
+### CIFAR-10
 
-#### CIFAR-10
+To train the model with [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) with (32, 32) images, simply run the following command. Chainer will download and cache the dataset for you.
 
-It is also possible to train the model with [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) using 32 x 32 images. Chainer will download the dataset and cache it automatically.
+Note that with the same default hyperparameters as for CelebA, the results look fairly poor with centered blob-like objects.
 
 ```bash
 python train.py --dataset cifar10 --batch-size 16 --iterations 10000 --gpu 1
 ```
 
-However, with the same default hyperparameters as for CelebA, the results look fairly poor with centered blob-like objects.
+Images are randomly sampled from the generator every certain number of iterations, and saved under a subdirectory `result`.
