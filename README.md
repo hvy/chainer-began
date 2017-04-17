@@ -16,10 +16,10 @@ The Adam learning rates are kept constant 5e-5, in contrast to the paper. Starti
 
 The model is trained with the aligned and cropped version of [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). Download and unarchive the whole dataset first.
 
-Images will during training be center cropped to remove some of the background and then rescaled to (64, 64). Images are randomly sampled from the generator every certain number of iterations, and saved under a subdirectory `result`.
+Images will during training be center cropped to remove some of the background and then rescaled to e.g. (64, 64) or (128, 128). A larger scale (output image resolution) will result in a deeper architecture. Images are randomly sampled from the generator every certain number of iterations, and saved under a subdirectory `result`.
 
 ```bash
-python train.py --celeba-root celeba/CelebA --batch-size 16 --iterations 10000 --gpu 1
+python train.py --celeba-root celeba/CelebA --celeba-scale 64 --batch-size 16 --iterations 10000 --gpu 1
 ```
 
 ### Other Datasets
