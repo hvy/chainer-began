@@ -8,7 +8,7 @@ Images sampled from the generator with random noise from unif(-1, 1) after 11420
 
 ![](images/loss.png)
 
-Plotting the losses for the generator and the discriminator as well as the global loss based on the process error. The visual fidelity of the generated samples keep improving even though the curves seem to converge.
+Plotting the losses for the generator and the discriminator as well as the global loss based on the process error. The visual fidelity of the generated samples keep improving throughout the training.
 
 The Adam learning rates are kept constant 5e-5, in contrast to the paper. Starting with a higher learning rate and then decaying it is expected to improve the results and converge faster.
 
