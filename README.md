@@ -6,10 +6,20 @@ Chainer implementation of the [BEGAN: Boundary Equilibrium Generative Adversaria
 
 The model is trained with the aligned and cropped version of [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). Download and unarchive the whole dataset first.
 
-Images will during training be center cropped to remove some of the background and then rescaled to (64, 64). Images are randomly sampled from the generator every certain number of iterations, and saved under a subdirectory `result/` (which is created automatically).
+Images will during training be center cropped to remove some of the background and then rescaled to (64, 64). Images are randomly sampled from the generator every certain number of iterations, and saved under a subdirectory `result`.
 
 ```bash
 python train.py --celeba-root celeba/CelebA --batch-size 16 --iterations 10000 --gpu 1
+```
+
+### Other Datasets
+
+It is also possible to train the model with [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) using 32 x 32 images. Chainer will download the dataset and cache it automatically.
+
+With the same default hyperparameters as for CelebA, the results fare fairly poor with centered blob-like objects.
+
+```bash
+python train.py --dataset cifar10 --batch-size 16 --iterations 10000 --gpu 1
 ```
 
 ## Training
