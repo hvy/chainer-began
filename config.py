@@ -22,7 +22,8 @@ def parse_args():
                         help='Width and height dimension of images')
 
     # General
-    parser.add_argument('--dataset', type=str, default='celeba')
+    parser.add_argument('--dataset', type=str, default='celeba',
+                        choices=['celeba', 'cifar10'])
     parser.add_argument('--iterations', type=int, default=500000)
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--out-dir', type=str, default='result')
